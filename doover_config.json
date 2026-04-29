@@ -8,51 +8,207 @@
         "description": "LoRa Gateway Packet forwarder over Websockets",
         "long_description": "README.md",
         "depends_on": [],
-        "owner_org_key": "FIX-ME",
+        "organisation_id": null,
+        "build_args": "NO_BUILD",
+        "container_registry_profile_id": 93955623347091970,
+        "export_ui_command": "NO_EXPORT",
         "image_name": "ghcr.io/getdoover/basics-station:main",
         "container_registry_profile_key": "FIX-ME",
-        "build_args": "--platform linux/amd64,linux/arm64",
+        "ui_schema": {},
         "config_schema": {
             "$schema": "https://json-schema.org/draft/2020-12/schema",
             "$id": "",
             "title": "$default",
             "type": "object",
             "properties": {
-                "digital_outputs_enabled": {
-                    "title": "Digital Outputs Enabled",
-                    "x-name": "digital_outputs_enabled",
+                "ttn_api_key": {
+                    "title": "TTN API Key",
+                    "x-name": "ttn_api_key",
+                    "x-hidden": false,
+                    "type": "string",
+                    "x-required": true,
+                    "description": "API key from TTN with 'Link as Gateway to a Gateway Server for traffic exchange' rights. Used for LNS authentication.",
+                    "x-position": 0
+                },
+                "gateway_eui": {
+                    "title": "Gateway EUI",
+                    "x-name": "gateway_eui",
                     "x-hidden": false,
                     "type": [
-                        "boolean",
+                        "string",
                         "null"
                     ],
                     "x-required": false,
-                    "default": true,
-                    "x-position": 0
+                    "description": "16-char hex EUI matching the Gateway EUI registered in TTN. Leave blank to fall back to the MAC-derived default.",
+                    "default": "",
+                    "x-position": 1,
+                    "pattern": "^([0-9A-Fa-f]{16})?$"
                 },
-                "a_funny_message": {
-                    "title": "A Funny Message",
-                    "x-name": "a_funny_message",
+                "ttn_region": {
+                    "title": "TTN Region",
+                    "x-name": "ttn_region",
                     "x-hidden": false,
-                    "type": "string",
-                    "x-required": true,
-                    "x-position": 1
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-required": false,
+                    "description": "TTN cluster region (e.g. au1, eu1, nam1).",
+                    "default": "au1",
+                    "x-position": 2,
+                    "x-advanced": true
                 },
-                "simulator_app_key": {
-                    "title": "Simulator App Key",
-                    "x-name": "simulator_app_key",
+                "concentrator_model": {
+                    "title": "Concentrator Model",
+                    "x-name": "concentrator_model",
                     "x-hidden": false,
-                    "format": "doover-resource-application",
-                    "type": "string",
-                    "x-required": true,
-                    "description": "The app key for the simulator",
-                    "x-position": 2
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-required": false,
+                    "description": "Concentrator hardware model (RAK2287 = SX1302 USB).",
+                    "default": "AUTO",
+                    "x-position": 3,
+                    "x-advanced": true
+                },
+                "interface": {
+                    "title": "Interface",
+                    "x-name": "interface",
+                    "x-hidden": false,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-required": false,
+                    "description": "Concentrator interface (auto, usb, spi).",
+                    "default": "AUTO",
+                    "x-position": 4,
+                    "x-advanced": true
                 }
             },
             "additionalElements": true,
             "required": [
-                "a_funny_message",
-                "simulator_app_key"
+                "ttn_api_key"
+            ]
+        },
+        "id": 175045635886606594,
+        "key": null,
+        "owner_org_id": null,
+        "code_repo_id": null,
+        "repo_branch": "main",
+        "lambda_config": null,
+        "icon_url": null,
+        "banner_url": null,
+        "staging_config": {},
+        "build_widget_command": null,
+        "export_config_command": null,
+        "run_command": null,
+        "lambda_arn": null
+    },
+    "basics_station_processor": {
+        "name": "basics_station_processor",
+        "display_name": "Basics Station Stats",
+        "type": "PRO",
+        "visibility": "PUB",
+        "allow_many": false,
+        "description": "Polls TTN for gateway connection stats and renders them in the UI.",
+        "long_description": "README.md",
+        "depends_on": [],
+        "organisation_id": null,
+        "export_config_command": "export-config-processor",
+        "export_ui_command": "export-ui-processor",
+        "lambda_config": {
+            "Environment": {},
+            "Runtime": "python3.13",
+            "Timeout": 60,
+            "Handler": "basics_station_processor.handler",
+            "MemorySize": 128,
+            "Architectures": [
+                "arm64"
+            ]
+        },
+        "icon_url": null,
+        "banner_url": null,
+        "staging_config": {},
+        "key": null,
+        "owner_org_id": null,
+        "code_repo_id": null,
+        "repo_branch": "main",
+        "image_name": null,
+        "container_registry_profile_id": null,
+        "run_command": null,
+        "lambda_arn": null,
+        "config_schema": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": "",
+            "title": "$default",
+            "type": "object",
+            "properties": {
+                "dv_proc_schedules": {
+                    "title": "Schedule",
+                    "x-name": "dv_proc_schedules",
+                    "x-hidden": false,
+                    "format": "doover-schedule",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-required": false,
+                    "description": "How often to poll TTN for gateway stats.",
+                    "default": "rate(5 minutes)",
+                    "x-position": 0
+                },
+                "dv_app_position": {
+                    "title": "Position",
+                    "x-name": "dv_app_position",
+                    "x-hidden": true,
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "x-required": false,
+                    "description": "Position of Application in UI Structure. Smaller numbers are closer to the top.",
+                    "default": 100,
+                    "x-position": 1,
+                    "minimum": 0
+                },
+                "ttn_region": {
+                    "title": "TTN Region",
+                    "x-name": "ttn_region",
+                    "x-hidden": false,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-required": false,
+                    "description": "TTN cluster region (e.g. au1, eu1, nam1).",
+                    "default": "au1",
+                    "x-position": 2
+                },
+                "gateway_id": {
+                    "title": "Gateway ID",
+                    "x-name": "gateway_id",
+                    "x-hidden": false,
+                    "type": "string",
+                    "x-required": true,
+                    "description": "The TTN gateway ID, as registered in the Console.",
+                    "x-position": 3
+                },
+                "ttn_console_api_key": {
+                    "title": "TTN Console API Key",
+                    "x-name": "ttn_console_api_key",
+                    "x-hidden": false,
+                    "type": "string",
+                    "x-required": true,
+                    "description": "API key with 'View gateway information' and 'View gateway status' rights. Used to query gateway connection stats from TTN.",
+                    "x-position": 4
+                }
+            },
+            "additionalElements": true,
+            "required": [
+                "gateway_id",
+                "ttn_console_api_key"
             ]
         },
         "ui_schema": {
@@ -61,140 +217,212 @@
             "position": "$config.app().dv_app_position:number:100",
             "icon": null,
             "colour": null,
-            "defaultOpen": false,
+            "defaultOpen": "$config.app().dv_app_default_open:boolean",
             "type": "uiApplication",
             "name": "$config.app().APP_KEY",
             "children": {
-                "is_working": {
-                    "name": "is_working",
+                "connected": {
+                    "name": "connected",
                     "type": "uiVariable",
-                    "displayString": "We Working?",
+                    "displayString": "Connected",
                     "showActivity": true,
-                    "position": 51,
+                    "position": 63,
                     "hidden": false,
                     "varType": "bool",
-                    "currentValue": "$tag.app().is_working:boolean:false"
+                    "currentValue": "$tag.app().connected:boolean:null"
                 },
-                "uptime": {
-                    "name": "uptime",
+                "protocol": {
+                    "name": "protocol",
                     "type": "uiVariable",
-                    "displayString": "Uptime",
+                    "displayString": "Protocol",
                     "showActivity": true,
-                    "position": 52,
-                    "hidden": false,
-                    "varType": "float",
-                    "currentValue": "$tag.app().uptime:number:0"
-                },
-                "send_alert": {
-                    "name": "send_alert",
-                    "type": "uiButton",
-                    "displayString": "Send message as alert",
-                    "position": 1,
-                    "hidden": false,
-                    "currentValue": "$cmds.app().send_alert",
-                    "appKey": "$config.app().APP_KEY"
-                },
-                "test_message": {
-                    "name": "test_message",
-                    "type": "uiTextInput",
-                    "displayString": "Put in a message",
-                    "position": 54,
-                    "hidden": false,
-                    "currentValue": "$cmds.app().test_message",
-                    "appKey": "$config.app().APP_KEY",
-                    "isTextArea": false
-                },
-                "test_output": {
-                    "name": "test_output",
-                    "type": "uiVariable",
-                    "displayString": "This is message we got",
-                    "showActivity": true,
-                    "position": 55,
+                    "position": 64,
                     "hidden": false,
                     "varType": "string",
-                    "currentValue": "$tag.app().test_output:string:\"\""
+                    "currentValue": "$tag.app().protocol:string:null"
                 },
-                "battery": {
-                    "name": "battery",
-                    "type": "uiSubmodule",
-                    "displayString": "Battery Module",
+                "connected_at": {
+                    "name": "connected_at",
+                    "type": "uiVariable",
+                    "displayString": "Connected At",
                     "showActivity": true,
-                    "position": 59,
+                    "position": 65,
+                    "hidden": false,
+                    "varType": "time",
+                    "currentValue": "$tag.app().connected_at:string:null"
+                },
+                "last_status": {
+                    "name": "last_status",
+                    "type": "uiVariable",
+                    "displayString": "Last Status",
+                    "showActivity": true,
+                    "position": 66,
+                    "hidden": false,
+                    "varType": "time",
+                    "currentValue": "$tag.app().last_status_at:string:null"
+                },
+                "traffic": {
+                    "name": "traffic",
+                    "type": "uiSubmodule",
+                    "displayString": "Traffic",
+                    "showActivity": true,
+                    "position": 67,
                     "hidden": false,
                     "children": {
-                        "voltage": {
-                            "name": "voltage",
+                        "downlinks": {
+                            "name": "downlinks",
                             "type": "uiVariable",
-                            "displayString": "Battery Voltage",
+                            "displayString": "Downlinks",
+                            "showActivity": true,
+                            "position": 52,
+                            "hidden": false,
+                            "varType": "float",
+                            "currentValue": "$tag.app().downlink_count:number:null",
+                            "decPrecision": 0
+                        },
+                        "last_downlink": {
+                            "name": "last_downlink",
+                            "type": "uiVariable",
+                            "displayString": "Last Downlink",
+                            "showActivity": true,
+                            "position": 55,
+                            "hidden": false,
+                            "varType": "time",
+                            "currentValue": "$tag.app().last_downlink_at:string:null"
+                        },
+                        "last_uplink": {
+                            "name": "last_uplink",
+                            "type": "uiVariable",
+                            "displayString": "Last Uplink",
+                            "showActivity": true,
+                            "position": 54,
+                            "hidden": false,
+                            "varType": "time",
+                            "currentValue": "$tag.app().last_uplink_at:string:null"
+                        },
+                        "tx_acks": {
+                            "name": "tx_acks",
+                            "type": "uiVariable",
+                            "displayString": "TX Acks",
+                            "showActivity": true,
+                            "position": 53,
+                            "hidden": false,
+                            "varType": "float",
+                            "currentValue": "$tag.app().tx_ack_count:number:null",
+                            "decPrecision": 0
+                        },
+                        "uplinks": {
+                            "name": "uplinks",
+                            "type": "uiVariable",
+                            "displayString": "Uplinks",
+                            "showActivity": true,
+                            "position": 51,
+                            "hidden": false,
+                            "varType": "float",
+                            "currentValue": "$tag.app().uplink_count:number:null",
+                            "decPrecision": 0
+                        }
+                    }
+                },
+                "round_trip_time": {
+                    "name": "round_trip_time",
+                    "type": "uiSubmodule",
+                    "displayString": "Round Trip Time",
+                    "showActivity": true,
+                    "position": 68,
+                    "hidden": false,
+                    "children": {
+                        "sample_count": {
+                            "name": "sample_count",
+                            "type": "uiVariable",
+                            "displayString": "Sample Count",
+                            "showActivity": true,
+                            "position": 57,
+                            "hidden": false,
+                            "varType": "float",
+                            "currentValue": "$tag.app().rtt_count:number:null",
+                            "decPrecision": 0
+                        },
+                        "median": {
+                            "name": "median",
+                            "type": "uiVariable",
+                            "displayString": "Median",
                             "showActivity": true,
                             "position": 56,
                             "hidden": false,
+                            "units": "ms",
                             "varType": "float",
-                            "currentValue": "$tag.app().battery_voltage:number:0",
-                            "decPrecision": 2,
-                            "ranges": [
-                                {
-                                    "min": 0,
-                                    "max": 10,
-                                    "colour": "red",
-                                    "show_on_graph": true,
-                                    "label": "Low"
-                                },
-                                {
-                                    "min": 10,
-                                    "max": 20,
-                                    "colour": "green",
-                                    "show_on_graph": true,
-                                    "label": "Normal"
-                                },
-                                {
-                                    "min": 20,
-                                    "max": 30,
-                                    "colour": "blue",
-                                    "show_on_graph": true,
-                                    "label": "High"
-                                }
-                            ]
-                        },
-                        "low_voltage_alert": {
-                            "name": "low_voltage_alert",
-                            "type": "uiFloatInput",
-                            "displayString": "Low Voltage Alert",
-                            "position": 57,
+                            "currentValue": "$tag.app().rtt_median_ms:number:null",
+                            "decPrecision": 1
+                        }
+                    }
+                },
+                "radio_metrics": {
+                    "name": "radio_metrics",
+                    "type": "uiSubmodule",
+                    "displayString": "Radio Metrics",
+                    "showActivity": true,
+                    "position": 69,
+                    "hidden": false,
+                    "children": {
+                        "forwarded": {
+                            "name": "forwarded",
+                            "type": "uiVariable",
+                            "displayString": "Forwarded",
+                            "showActivity": true,
+                            "position": 60,
                             "hidden": false,
-                            "currentValue": "$cmds.app().low_voltage_alert",
-                            "appKey": "$config.app().APP_KEY"
+                            "varType": "float",
+                            "currentValue": "$tag.app().rx_forwarded:number:null",
+                            "decPrecision": 0
                         },
-                        "charge_mode": {
-                            "name": "charge_mode",
-                            "type": "uiSelect",
-                            "displayString": "Charge Mode",
+                        "crc_ok": {
+                            "name": "crc_ok",
+                            "type": "uiVariable",
+                            "displayString": "CRC OK",
+                            "showActivity": true,
+                            "position": 59,
+                            "hidden": false,
+                            "varType": "float",
+                            "currentValue": "$tag.app().rx_ok:number:null",
+                            "decPrecision": 0
+                        },
+                        "packets_received": {
+                            "name": "packets_received",
+                            "type": "uiVariable",
+                            "displayString": "Packets Received",
+                            "showActivity": true,
                             "position": 58,
                             "hidden": false,
-                            "currentValue": "$cmds.app().charge_mode",
-                            "appKey": "$config.app().APP_KEY",
-                            "options": {
-                                "charge": {
-                                    "name": "charge",
-                                    "displayString": "Charge",
-                                    "type": "uiElement"
-                                },
-                                "discharge": {
-                                    "name": "discharge",
-                                    "displayString": "Discharge",
-                                    "type": "uiElement"
-                                },
-                                "idle": {
-                                    "name": "idle",
-                                    "displayString": "Idle",
-                                    "type": "uiElement"
-                                }
-                            }
+                            "varType": "float",
+                            "currentValue": "$tag.app().rx_received:number:null",
+                            "decPrecision": 0
+                        },
+                        "tx_ok": {
+                            "name": "tx_ok",
+                            "type": "uiVariable",
+                            "displayString": "TX OK",
+                            "showActivity": true,
+                            "position": 62,
+                            "hidden": false,
+                            "varType": "float",
+                            "currentValue": "$tag.app().tx_ok:number:null",
+                            "decPrecision": 0
+                        },
+                        "tx_received": {
+                            "name": "tx_received",
+                            "type": "uiVariable",
+                            "displayString": "TX Received",
+                            "showActivity": true,
+                            "position": 61,
+                            "hidden": false,
+                            "varType": "float",
+                            "currentValue": "$tag.app().tx_received:number:null",
+                            "decPrecision": 0
                         }
                     }
                 }
             }
-        },
-        "organisation_id": "FIX-ME"
+        }
     }
 }

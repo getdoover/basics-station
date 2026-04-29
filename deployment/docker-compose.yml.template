@@ -1,0 +1,14 @@
+services:
+  basic-station:
+    image: xoseperez/basicstation:latest
+    container_name: basic-station
+    environment:
+      - MODEL={{concentrator_model}}
+      - INTERFACE={{interface}}
+      - TTS_REGION={{ttn_region}}
+      - TC_KEY={{ttn_api_key}}
+      - GW_ID={{gateway_eui}}
+
+    privileged: true
+    network_mode: host
+    restart: unless-stopped
