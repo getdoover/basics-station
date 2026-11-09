@@ -72,6 +72,20 @@
                     "x-position": 3,
                     "x-advanced": true
                 },
+                "device_path": {
+                    "title": "Device Path",
+                    "x-name": "device_path",
+                    "x-hidden": false,
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "x-required": false,
+                    "description": "Concentrator serial device, e.g. a /dev/serial/by-id/... path. AUTO probes every ttyACM/ttyUSB port, which disrupts other serial devices (e.g. the Doovit IO board), so set this explicitly.",
+                    "default": "AUTO",
+                    "x-position": 4,
+                    "x-advanced": true
+                },
                 "interface": {
                     "title": "Interface",
                     "x-name": "interface",
@@ -83,7 +97,7 @@
                     "x-required": false,
                     "description": "Concentrator interface (auto, usb, spi).",
                     "default": "AUTO",
-                    "x-position": 4,
+                    "x-position": 5,
                     "x-advanced": true
                 }
             },

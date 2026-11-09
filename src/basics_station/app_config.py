@@ -30,6 +30,16 @@ class BasicStationConfig(config.Schema):
         description="Concentrator hardware model (RAK2287 = SX1302 USB).",
         advanced=True,
     )
+    device_path = config.String(
+        "Device Path",
+        default="AUTO",
+        description=(
+            "Concentrator serial device, e.g. a /dev/serial/by-id/... path. "
+            "AUTO probes every ttyACM/ttyUSB port, which disrupts other serial "
+            "devices (e.g. the Doovit IO board), so set this explicitly."
+        ),
+        advanced=True,
+    )
     interface = config.String(
         "Interface",
         default="AUTO",

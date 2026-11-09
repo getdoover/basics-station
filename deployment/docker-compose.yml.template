@@ -8,6 +8,9 @@ services:
       - TTS_REGION={{ttn_region}}
       - TC_KEY={{ttn_api_key}}
       - GW_ID={{gateway_eui}}
+      - DEVICE={{device_path}}
+    volumes:
+      - /dev:/dev
 
     privileged: true
     network_mode: host
