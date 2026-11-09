@@ -111,7 +111,6 @@
         "owner_org_id": null,
         "code_repo_id": null,
         "repo_branch": "main",
-        "lambda_config": null,
         "icon_url": "https://cdn.jsdelivr.net/gh/getdoover/app-icons@f6ca20eca2c2d1e05184cb06bf6fee951bba40e7/icons/semtech.svg",
         "banner_url": null,
         "staging_config": {},
