@@ -1,7 +1,6 @@
 services:
   basic-station:
     image: xoseperez/basicstation:latest
-    container_name: basic-station
     environment:
       - MODEL={{concentrator_model}}
       - INTERFACE={{interface}}
